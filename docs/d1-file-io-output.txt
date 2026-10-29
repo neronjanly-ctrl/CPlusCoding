@@ -1,0 +1,12 @@
+open succeeded: fd=3
+write returned: 25
+offset after write: 25
+read before rewind: 0
+offset after rewind: 0
+read after rewind: 25
+content: Hello from Linux write()
+offset after read: 25
+close succeeded
+PASS: file offset experiment
+open missing file: return=-1, errno=2 (No such file or directory)
+PASS: errno experiment (ENOENT)

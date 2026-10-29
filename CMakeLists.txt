@@ -14,6 +14,14 @@ target_compile_options(hello PRIVATE
     -Wpedantic
 )
 
+add_executable(file_io_demo src/file_io_demo.cpp)
+
+target_compile_options(file_io_demo PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
 option(
     ENABLE_SANITIZERS
     "Enable AddressSanitizer and UndefinedBehaviorSanitizer"
@@ -21,12 +29,18 @@ option(
 )
 
 if(ENABLE_SANITIZERS)
-    target_compile_options(hello PRIVATE
-        -fsanitize=address,undefined
-        -fno-omit-frame-pointer
-    )
-
-    target_link_options(hello PRIVATE
-        -fsanitize=address,undefined
-    )
+    foreach(lab_target IN ITEMS hello file_io_demo)
+        target_compile_options(${lab_target} PRIVATE
+            -fsanitize=address,undefined
+            -fno-omit-frame-pointer
+        )
+        target_link_options(${lab_target} PRIVATE
+            -fsanitize=address,undefined
+        )
+    endforeach()
 endif()
+
+enable_testing()
+add_test(NAME file_io_demo COMMAND file_io_demo)
+# The teaching demo uses fixed /tmp paths; do not run concurrent copies.
+set_tests_properties(file_io_demo PROPERTIES RUN_SERIAL TRUE)

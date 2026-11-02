@@ -78,4 +78,14 @@ fi
     "$binary_dir/mmap_demo"
 } >"$docs_dir/d4-mmap-output.txt" 2>&1
 
+{
+    echo "--- signal_demo ---"
+    "$binary_dir/signal_demo"
+} >"$docs_dir/d4-signal-output.txt" 2>&1
+
+strace -f -yy \
+    -e trace=signal,process \
+    -o "$docs_dir/d4-signal.strace" \
+    "$binary_dir/signal_demo" >/dev/null
+
 echo "Evidence refreshed under $docs_dir"

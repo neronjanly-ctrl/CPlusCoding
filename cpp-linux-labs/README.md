@@ -22,7 +22,7 @@ Executables are placed under `build/debug/cpp-linux-labs/`.
 | D1 | `file_io_demo` | FD lifecycle, file offset, EOF, `errno` |
 | D2 | `process_demo`, `exec_demo`, `pipe_demo`, `pipe_exec_demo`, `pipeline_demo` | `fork/exec/wait`, pipes, `dup2`, exit status |
 | D3 | `producer_consumer_demo`, `race_demo`, `race_unsafe_demo` | condition variables, bounded queues, race detection and repair |
-| D4 | `mmap_demo` | shared anonymous mapping and process-shared mutex |
+| D4 | `mmap_demo`, `signal_demo` | shared mapping, process-shared mutex, reliable signal waiting |
 
 `race_unsafe_demo` is intentionally excluded from normal builds and tests. It
 exists only to produce a TSan report in the opt-in `tsan` preset.

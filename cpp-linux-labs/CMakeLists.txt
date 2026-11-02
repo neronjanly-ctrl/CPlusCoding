@@ -38,8 +38,13 @@ endif()
 
 find_package(Threads REQUIRED)
 
+# --------------------------------------------------
+# Common executable configuration
+# --------------------------------------------------
+
 function(add_lab_executable target source)
     add_executable(${target} ${source})
+
     target_compile_options(${target} PRIVATE
         -Wall
         -Wextra
@@ -51,31 +56,61 @@ function(add_lab_executable target source)
             -fsanitize=address,undefined
             -fno-omit-frame-pointer
         )
+
         target_link_options(${target} PRIVATE
             -fsanitize=address,undefined
         )
     endif()
 endfunction()
 
+# --------------------------------------------------
+# D1: File I/O
+# --------------------------------------------------
+
 add_lab_executable(hello src/hello.cpp)
 add_lab_executable(file_io_demo src/file_io_demo.cpp)
+
+# --------------------------------------------------
+# D2: Linux Process Management
+# --------------------------------------------------
+
 add_lab_executable(process_demo src/process_demo.cpp)
 add_lab_executable(exec_demo src/exec_demo.cpp)
 add_lab_executable(pipe_demo src/pipe_demo.cpp)
 add_lab_executable(pipe_exec_demo src/pipe_exec_demo.cpp)
 add_lab_executable(pipeline_demo src/pipeline_demo.cpp)
+
+# --------------------------------------------------
+# D3: Threads and Synchronization
+# --------------------------------------------------
+
 add_lab_executable(producer_consumer_demo src/producer_consumer_demo.cpp)
 add_lab_executable(race_demo src/race_demo.cpp)
-add_lab_executable(mmap_demo src/mmap_demo.cpp)
 
 target_link_libraries(producer_consumer_demo PRIVATE Threads::Threads)
 target_link_libraries(race_demo PRIVATE Threads::Threads)
+
+# --------------------------------------------------
+# D4: Shared Memory and Signals
+# --------------------------------------------------
+
+add_lab_executable(mmap_demo src/mmap_demo.cpp)
+add_lab_executable(signal_demo src/signal_demo.cpp)
+
 target_link_libraries(mmap_demo PRIVATE Threads::Threads)
+
+# --------------------------------------------------
+# Optional unsafe demonstrations
+# --------------------------------------------------
 
 if(BUILD_UNSAFE_LABS)
     add_lab_executable(race_unsafe_demo src/race_unsafe_demo.cpp)
     target_link_libraries(race_unsafe_demo PRIVATE Threads::Threads)
 endif()
+
+# --------------------------------------------------
+# ThreadSanitizer configuration
+# --------------------------------------------------
 
 if(ENABLE_TSAN)
     foreach(race_target IN ITEMS race_demo race_unsafe_demo)
@@ -84,34 +119,52 @@ if(ENABLE_TSAN)
             -fno-omit-frame-pointer
             -g
         )
-        target_link_options(${race_target} PRIVATE -fsanitize=thread)
+
+        target_link_options(${race_target} PRIVATE
+            -fsanitize=thread
+        )
     endforeach()
 endif()
+
+# --------------------------------------------------
+# CTest configuration
+# --------------------------------------------------
 
 include(CTest)
 
 if(BUILD_TESTING)
+
+    # D1
     add_test(NAME d1_file_io COMMAND file_io_demo)
+
     set_tests_properties(d1_file_io PROPERTIES
         LABELS "D1"
         RUN_SERIAL TRUE
         PASS_REGULAR_EXPRESSION "PASS: errno experiment"
     )
 
+    # D2
     add_test(NAME d2_process COMMAND process_demo)
     add_test(NAME d2_exec COMMAND exec_demo)
     add_test(NAME d2_pipe COMMAND pipe_demo)
     add_test(NAME d2_pipe_exec COMMAND pipe_exec_demo)
     add_test(NAME d2_pipeline COMMAND pipeline_demo)
+
     set_tests_properties(
-        d2_process d2_exec d2_pipe d2_pipe_exec d2_pipeline
+        d2_process
+        d2_exec
+        d2_pipe
+        d2_pipe_exec
+        d2_pipeline
         PROPERTIES LABELS "D2"
     )
 
+    # D3
     add_test(NAME d3_producer_consumer COMMAND producer_consumer_demo)
+
     if(ENABLE_TSAN)
         # WSL's default address layout can collide with GCC TSan shadow memory.
-        # Disable ASLR for this process only; no global sysctl is changed.
+        # Disable ASLR for this process only.
         add_test(
             NAME d3_race_fixed
             COMMAND ${SETARCH_EXECUTABLE} ${CMAKE_SYSTEM_PROCESSOR}
@@ -120,11 +173,20 @@ if(BUILD_TESTING)
     else()
         add_test(NAME d3_race_fixed COMMAND race_demo)
     endif()
+
     set_tests_properties(
-        d3_producer_consumer d3_race_fixed
+        d3_producer_consumer
+        d3_race_fixed
         PROPERTIES LABELS "D3"
     )
 
+    # D4
     add_test(NAME d4_mmap COMMAND mmap_demo)
-    set_tests_properties(d4_mmap PROPERTIES LABELS "D4")
+    add_test(NAME d4_signal COMMAND signal_demo)
+
+    set_tests_properties(d4_mmap d4_signal PROPERTIES LABELS "D4")
+    set_tests_properties(d4_signal PROPERTIES
+        PASS_REGULAR_EXPRESSION "PASS: signal delivery and child cleanup"
+    )
+
 endif()

@@ -1,0 +1,5 @@
+--- signal_demo ---
+[Parent] Waiting for SIGUSR1...
+[Parent] Received SIGUSR1
+[Parent] Child exit code = 0
+PASS: signal delivery and child cleanup

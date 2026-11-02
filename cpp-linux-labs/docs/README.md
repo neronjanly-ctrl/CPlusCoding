@@ -9,7 +9,7 @@ path or personal understanding.
 | D1 | `d1-file-io.md` | `d1-file-io-output.txt`, `d1-file-io.strace` |
 | D2 | `d2-process-pipe.md` | `d2-process-pipe-output.txt`, `d2-pipeline.strace` |
 | D3 | `d3-threading.md` | `d3-thread-output.txt`, `d3-tsan-unsafe.txt` |
-| D4 | `d4-mmap.md` | `d4-mmap-output.txt` |
+| D4 | `d4-mmap.md`, `d4-signal-learning.md` | `d4-mmap-output.txt`, `d4-signal-output.txt`, `d4-signal.strace` |
 
 Refresh D2-D4 evidence only after building the root `debug` and `tsan` presets:
 

@@ -1,0 +1,40 @@
+command: process_demo --hold-seconds 3 plus ps/pstree/lsof
+kernel: Linux 6.6.87.2-microsoft-standard-WSL2 x86_64 GNU/Linux
+
+Before fork: PID = 1915
+[Child] PID = 1917, PPID = 1915
+--- ps ---
+    PID    PPID STAT CMD
+   1915    1911 S+   /home/neron/workspace/tencent-cpp/build/debug/cpp-linux-labs/process_demo --hold-seconds 3
+   1917    1915 S+   /home/neron/workspace/tencent-cpp/build/debug/cpp-linux-labs/process_demo --hold-seconds 3
+--- pstree ---
+process_demo(1915)---process_demo(1917)
+--- lsof standard descriptors ---
+COMMAND    PID  USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+process_d 1915 neron    0r   CHR    1,3      0t0      4 /dev/null
+process_d 1915 neron    1w   REG   8,48      529 377894 /home/neron/workspace/tencent-cpp/cpp-linux-labs/docs/d2-process-pipe-output.txt
+process_d 1915 neron    2w   REG   8,48      529 377894 /home/neron/workspace/tencent-cpp/cpp-linux-labs/docs/d2-process-pipe-output.txt
+process_d 1917 neron    0r   CHR    1,3      0t0      4 /dev/null
+process_d 1917 neron    1w   REG   8,48      529 377894 /home/neron/workspace/tencent-cpp/cpp-linux-labs/docs/d2-process-pipe-output.txt
+process_d 1917 neron    2w   REG   8,48      529 377894 /home/neron/workspace/tencent-cpp/cpp-linux-labs/docs/d2-process-pipe-output.txt
+[Parent] PID = 1915, child PID = 1917
+[Parent] Child 1917 exited with code 7
+PASS: fork and waitpid experiment
+
+--- exec_demo ---
+[Child] Before exec, PID = 1926
+Hello from exec
+[Parent] Child exit code = 0
+PASS: fork and exec experiment
+--- pipe_demo ---
+Hello from child process
+PASS: pipe communication
+--- pipe_exec_demo ---
+Hello through pipe and exec
+PASS: pipe + dup2 + exec
+--- pipeline_demo ---
+6
+[Parent] pipe created: read_fd=3, write_fd=4
+[Parent] echo child PID = 1932
+[Parent] wc child PID = 1933
+[Parent] Both children exited successfully

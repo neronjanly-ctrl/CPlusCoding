@@ -1,0 +1,5 @@
+--- mmap_demo ---
+Parent increments: 100000
+Child increments: 100000
+Final counter: 200000
+PASS: shared memory synchronization

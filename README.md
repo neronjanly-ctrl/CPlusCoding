@@ -1,71 +1,66 @@
-# cpp-linux-labs
+# CPlusCoding
 
-Linux C++ system-programming experiments for the Tencent backend interview roadmap.
+This repository contains the implementation and reproducible evidence for a
+Tencent-oriented C++/Linux backend learning project.
 
-## Environment
+## Repository layout
 
-- WSL2
-- Ubuntu 24.04.4 LTS
-- GCC 13.3.0
-- CMake 3.28.3
-- Ninja 1.11.1
-- GDB 15.1
-- Clang/clang-format 18.1.3
-- C++ standard: C++17
+| Path | Purpose | Current state |
+|---|---|---|
+| `cpp-linux-labs/` | Linux system-programming foundations | Active |
+| `mininet/` | Reactor-style network library | Planned; no implementation yet |
+| `linkcore/` | Short-link and hot-query service | Planned; no implementation yet |
+| `edge-gateway/` | Multi-instance gateway and resilience experiments | Planned; no implementation yet |
 
-## Build
+The Git root is `/home/neron/workspace/tencent-cpp`. Build directories are
+created under `build/` and are not committed.
 
-### Debug
+## Source of truth
 
-```bash
-cmake -S . -B build-debug -G Ninja -DCMAKE_BUILD_TYPE=Debug
-cmake --build build-debug
-./build-debug/hello
-./build-debug/file_io_demo
-ctest --test-dir build-debug --output-on-failure
-```
+The current learning plan and progress ledger are maintained in the Windows
+workspace:
 
-### Release
+- `D:/CPlusTwoProjects/docs/tencent-cpp-10-week-master-plan.md`
+- `D:/CPlusTwoProjects/docs/learning-progress.md`
+- `D:/CPlusTwoProjects/docs/project-memory.md`
 
-```bash
-cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build-release
-./build-release/hello
-```
+This repository stores code, tests, runnable instructions, and original
+evidence. A source file or a passing command does not by itself prove personal
+understanding; the progress ledger records that separately.
 
-### ASan and UBSan
+## Build and test
+
+Run all commands from the repository root.
 
 ```bash
-cmake -S . -B build-asan \
-  -G Ninja \
-  -DCMAKE_BUILD_TYPE=Debug \
-  -DENABLE_SANITIZERS=ON
-
-cmake --build build-asan
-./build-asan/hello
-./build-asan/file_io_demo
-ctest --test-dir build-asan --output-on-failure
+cmake --preset debug
+cmake --build --preset debug --parallel 2
+ctest --preset debug
 ```
 
-## Week 1 progress
+Other supported presets are `release`, `asan`, and `tsan`:
 
-- [x] Configure the WSL C++ toolchain
-- [x] Create a minimal C++17 CMake project
-- [x] Enable compiler warnings
-- [x] Verify Debug and Release builds
-- [x] Verify ASan and UBSan linkage
-- [x] Implement and run file-descriptor, file-offset, and ENOENT experiments
-- [ ] Independently explain the file-offset and errno results
+```bash
+cmake --preset asan
+cmake --build --preset asan --parallel 2
+ctest --preset asan
+```
 
-## D1 file I/O evidence
+The `tsan` preset also builds the intentionally unsafe `race_unsafe_demo`. It
+is excluded from CTest because a ThreadSanitizer report is its expected
+teaching result. The CTest wrapper uses process-local `setarch ... -R` on WSL;
+it does not change a global kernel setting. See `cpp-linux-labs/README.md`
+before running the unsafe target.
 
-See [experiment explanation and acceptance criteria](docs/d1-file-io.md),
-[captured output](docs/d1-file-io-output.txt), and
-[system-call trace](docs/d1-file-io.strace).
+## Repository rules
 
-The demo truncates `/tmp/cpp_linux_labs_file_io.txt` on each run and expects
-`/tmp/cpp_linux_labs_missing_for_errno.txt` to be absent. Run one copy at a time.
-The existing `build/` directory uses Unix Makefiles and has no build type
-selected. The `build-debug/` directory provides the regular Ninja Debug
-configuration, while `build-clean/` was used to verify configuration,
-compilation, linking, execution, and CTest from a separate build directory.
+1. Keep implementation, tests, scripts, and raw reproduction evidence in the
+   project that owns them.
+2. Do not commit build directories, core dumps, credentials, database data, or
+   copied learning-management documents.
+3. A test must return a nonzero exit code on failure; printing `FAIL` alone is
+   not sufficient.
+4. Record environment, command, output, and known limitations for important
+   experiments.
+5. Commit only a coherent verified change. Do not mark later projects complete
+   merely because their directories exist.

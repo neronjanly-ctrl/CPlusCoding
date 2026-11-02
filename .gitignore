@@ -9,3 +9,7 @@ compile_commands.json
 
 core
 core.*
+
+# Local historical copies. The active learning plan lives in the Windows
+# workspace documented in README.md.
+interview-notes/

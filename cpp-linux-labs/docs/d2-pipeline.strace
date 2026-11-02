@@ -1,0 +1,98 @@
+1937  execve("/home/neron/workspace/tencent-cpp/build/debug/cpp-linux-labs/pipeline_demo", ["/home/neron/workspace/tencent-cp"...], 0x7fff134da360 /* 24 vars */) = 0
+1937  close(3</etc/ld.so.cache>)        = 0
+1937  read(3</usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33>, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+1937  close(3</usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33>) = 0
+1937  read(3</usr/lib/x86_64-linux-gnu/libc.so.6>, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\243\2\0\0\0\0\0"..., 832) = 832
+1937  close(3</usr/lib/x86_64-linux-gnu/libc.so.6>) = 0
+1937  read(3</usr/lib/x86_64-linux-gnu/libm.so.6>, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+1937  close(3</usr/lib/x86_64-linux-gnu/libm.so.6>) = 0
+1937  read(3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+1937  close(3</usr/lib/x86_64-linux-gnu/libgcc_s.so.1>) = 0
+1937  pipe2([3<pipe:[11753]>, 4<pipe:[11753]>], 0) = 0
+1937  clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7d3c20b637d0) = 1938
+1937  clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+1938  close(3<pipe:[11753]>)            = 0
+1938  dup2(4<pipe:[11753]>, 1</dev/null<char 1:3>> <unfinished ...>
+1937  <... clone resumed>, child_tidptr=0x7d3c20b637d0) = 1939
+1938  <... dup2 resumed>)               = 1<pipe:[11753]>
+1937  close(3<pipe:[11753]>)            = 0
+1939  close(4<pipe:[11753]> <unfinished ...>
+1938  close(4<pipe:[11753]> <unfinished ...>
+1937  close(4<pipe:[11753]> <unfinished ...>
+1939  <... close resumed>)              = 0
+1939  dup2(3<pipe:[11753]>, 0<pipe:[16865]> <unfinished ...>
+1938  <... close resumed>)              = 0
+1937  <... close resumed>)              = 0
+1937  wait4(1938,  <unfinished ...>
+1939  <... dup2 resumed>)               = 0<pipe:[11753]>
+1938  execve("/bin/echo", ["echo", "Hello"], 0x7ffd745e5ff8 /* 24 vars */ <unfinished ...>
+1939  close(3<pipe:[11753]>)            = 0
+1939  execve("/usr/bin/wc", ["wc", "-c"], 0x7ffd745e5ff8 /* 24 vars */) = 0
+1938  <... execve resumed>)             = 0
+1939  close(3</etc/ld.so.cache>)        = 0
+1939  read(3</usr/lib/x86_64-linux-gnu/libc.so.6>,  <unfinished ...>
+1938  close(3</etc/ld.so.cache> <unfinished ...>
+1939  <... read resumed>"\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\243\2\0\0\0\0\0"..., 832) = 832
+1938  <... close resumed>)              = 0
+1938  read(3</usr/lib/x86_64-linux-gnu/libc.so.6>, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\243\2\0\0\0\0\0"..., 832) = 832
+1939  close(3</usr/lib/x86_64-linux-gnu/libc.so.6>) = 0
+1938  close(3</usr/lib/x86_64-linux-gnu/libc.so.6>) = 0
+1939  read(3</etc/locale.alias>, "# Locale name alias data base.\n#"..., 4096) = 2996
+1939  read(3</etc/locale.alias>, "", 4096) = 0
+1939  close(3</etc/locale.alias>)       = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_IDENTIFICATION>) = 0
+1938  read(3</etc/locale.alias>, "# Locale name alias data base.\n#"..., 4096) = 2996
+1938  read(3</etc/locale.alias>, "", 4096) = 0
+1938  close(3</etc/locale.alias>)       = 0
+1939  close(3</usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_IDENTIFICATION>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_MEASUREMENT>) = 0
+1938  close(3</usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_TELEPHONE>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_MEASUREMENT>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_ADDRESS>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_TELEPHONE>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_NAME>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_ADDRESS>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_PAPER>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_NAME>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_MESSAGES>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES> <unfinished ...>
+1938  close(3</usr/lib/locale/C.utf8/LC_PAPER> <unfinished ...>
+1939  <... close resumed>)              = 0
+1938  <... close resumed>)              = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_MESSAGES>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_MONETARY>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_COLLATE>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_MONETARY>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_TIME>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_COLLATE>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_NUMERIC>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_TIME>) = 0
+1939  close(3</usr/lib/locale/C.utf8/LC_CTYPE>) = 0
+1939  read(0<pipe:[11753]>,  <unfinished ...>
+1938  close(3</usr/lib/locale/C.utf8/LC_NUMERIC>) = 0
+1938  close(3</usr/lib/locale/C.utf8/LC_CTYPE>) = 0
+1938  write(1<pipe:[11753]>, "Hello\n", 6 <unfinished ...>
+1939  <... read resumed>"Hello\n", 16384) = 6
+1938  <... write resumed>)              = 6
+1939  read(0<pipe:[11753]>,  <unfinished ...>
+1938  close(1<pipe:[11753]> <unfinished ...>
+1939  <... read resumed>"", 16384)      = 0
+1938  <... close resumed>)              = 0
+1938  close(2<pipe:[16867]>)            = 0
+1939  write(1</dev/null<char 1:3>>, "6\n", 2) = 2
+1938  +++ exited with 0 +++
+1939  close(0<pipe:[11753]> <unfinished ...>
+1937  <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 1938
+1937  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1938, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1937  wait4(1939,  <unfinished ...>
+1939  <... close resumed>)              = 0
+1939  close(1</dev/null<char 1:3>>)     = 0
+1939  close(2<pipe:[16867]>)            = 0
+1939  +++ exited with 0 +++
+1937  <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 1939
+1937  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1939, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1937  write(1</dev/null<char 1:3>>, "[Parent] pipe created: read_fd=3"..., 148) = 148
+1937  +++ exited with 0 +++

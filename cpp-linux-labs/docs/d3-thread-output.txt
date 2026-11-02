@@ -1,0 +1,7 @@
+--- producer_consumer_demo ---
+Consumed tasks: 10
+Total sum: 55
+PASS: producer-consumer experiment
+--- race_demo (fixed, TSan) ---
+Final counter: 200000
+PASS: synchronized counter

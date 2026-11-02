@@ -1,0 +1,71 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=1947)
+  Read of size 4 at 0x555555559154 by thread T2:
+    #0 worker() /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:10 (race_unsafe_demo+0x13b9) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #1 void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) /usr/include/c++/13/bits/invoke.h:61 (race_unsafe_demo+0x21c4) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #2 std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) /usr/include/c++/13/bits/invoke.h:96 (race_unsafe_demo+0x2119) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #3 void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) /usr/include/c++/13/bits/std_thread.h:292 (race_unsafe_demo+0x206e) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #4 std::thread::_Invoker<std::tuple<void (*)()> >::operator()() /usr/include/c++/13/bits/std_thread.h:299 (race_unsafe_demo+0x2010) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #5 std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() /usr/include/c++/13/bits/std_thread.h:244 (race_unsafe_demo+0x1fc2) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #6 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Previous write of size 4 at 0x555555559154 by thread T1:
+    #0 worker() /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:10 (race_unsafe_demo+0x13d1) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #1 void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) /usr/include/c++/13/bits/invoke.h:61 (race_unsafe_demo+0x21c4) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #2 std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) /usr/include/c++/13/bits/invoke.h:96 (race_unsafe_demo+0x2119) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #3 void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) /usr/include/c++/13/bits/std_thread.h:292 (race_unsafe_demo+0x206e) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #4 std::thread::_Invoker<std::tuple<void (*)()> >::operator()() /usr/include/c++/13/bits/std_thread.h:299 (race_unsafe_demo+0x2010) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #5 std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() /usr/include/c++/13/bits/std_thread.h:244 (race_unsafe_demo+0x1fc2) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #6 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Location is global 'counter' of size 4 at 0x555555559154 (race_unsafe_demo+0x5154)
+
+  Thread T2 (tid=1950, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 main /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:16 (race_unsafe_demo+0x1444) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+
+  Thread T1 (tid=1949, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 main /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:15 (race_unsafe_demo+0x142e) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+
+SUMMARY: ThreadSanitizer: data race /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:10 in worker()
+==================
+==================
+WARNING: ThreadSanitizer: data race (pid=1947)
+  Write of size 4 at 0x555555559154 by thread T2:
+    #0 worker() /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:10 (race_unsafe_demo+0x13d1) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #1 void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) /usr/include/c++/13/bits/invoke.h:61 (race_unsafe_demo+0x21c4) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #2 std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) /usr/include/c++/13/bits/invoke.h:96 (race_unsafe_demo+0x2119) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #3 void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) /usr/include/c++/13/bits/std_thread.h:292 (race_unsafe_demo+0x206e) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #4 std::thread::_Invoker<std::tuple<void (*)()> >::operator()() /usr/include/c++/13/bits/std_thread.h:299 (race_unsafe_demo+0x2010) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #5 std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() /usr/include/c++/13/bits/std_thread.h:244 (race_unsafe_demo+0x1fc2) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #6 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Previous write of size 4 at 0x555555559154 by thread T1:
+    #0 worker() /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:10 (race_unsafe_demo+0x13d1) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #1 void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) /usr/include/c++/13/bits/invoke.h:61 (race_unsafe_demo+0x21c4) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #2 std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) /usr/include/c++/13/bits/invoke.h:96 (race_unsafe_demo+0x2119) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #3 void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) /usr/include/c++/13/bits/std_thread.h:292 (race_unsafe_demo+0x206e) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #4 std::thread::_Invoker<std::tuple<void (*)()> >::operator()() /usr/include/c++/13/bits/std_thread.h:299 (race_unsafe_demo+0x2010) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #5 std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() /usr/include/c++/13/bits/std_thread.h:244 (race_unsafe_demo+0x1fc2) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+    #6 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Location is global 'counter' of size 4 at 0x555555559154 (race_unsafe_demo+0x5154)
+
+  Thread T2 (tid=1950, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 main /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:16 (race_unsafe_demo+0x1444) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+
+  Thread T1 (tid=1949, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 main /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:15 (race_unsafe_demo+0x142e) (BuildId: 06956e5e0c83accaf8572dc2d65d767e3916545d)
+
+SUMMARY: ThreadSanitizer: data race /home/neron/workspace/tencent-cpp/cpp-linux-labs/src/race_unsafe_demo.cpp:10 in worker()
+==================
+Unsafe final counter: 200000
+ThreadSanitizer: reported 2 warnings
+exit_status=66

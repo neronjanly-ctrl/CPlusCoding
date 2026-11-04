@@ -63,5 +63,29 @@ result.
 - GDB 15.1
 - Clang/clang-format 18.1.3
 
-Recheck versions after the environment changes; this list is not a permanent
-guarantee.
+## D4: Linux IPC and Resource Management
+
+### Experiments
+
+| Experiment | Source | Main concepts |
+|---|---|---|
+| Shared memory | `src/mmap_demo.cpp` | mmap, MAP_SHARED, process-shared mutex |
+| Signals | `src/signal_demo.cpp` | sigaction, sigprocmask, sigsuspend |
+| Duplex Pipe | `src/pipe_duplex_demo.cpp` | bidirectional IPC, FD lifecycle, EOF |
+| Unix Domain Socket | `src/socketpair_demo.cpp` | socketpair, AF_UNIX, SOCK_STREAM |
+
+### Documentation
+
+See:
+
+- [D4 shared memory](docs/d4-mmap.md)
+- [D4 signal learning](docs/d4-signal-learning.md)
+- [D4 IPC comparison](docs/d4-ipc-comparison.md)
+
+### Build and Test
+
+```bash
+cmake --build build-debug --parallel 2
+
+ctest --test-dir build-debug \
+    -L D4 --output-on-failure

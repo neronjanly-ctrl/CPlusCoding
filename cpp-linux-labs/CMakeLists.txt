@@ -96,6 +96,8 @@ target_link_libraries(race_demo PRIVATE Threads::Threads)
 
 add_lab_executable(mmap_demo src/mmap_demo.cpp)
 add_lab_executable(signal_demo src/signal_demo.cpp)
+add_lab_executable(pipe_duplex_demo src/pipe_duplex_demo.cpp)
+add_lab_executable(socketpair_demo src/socketpair_demo.cpp)
 
 target_link_libraries(mmap_demo PRIVATE Threads::Threads)
 
@@ -183,10 +185,27 @@ if(BUILD_TESTING)
     # D4
     add_test(NAME d4_mmap COMMAND mmap_demo)
     add_test(NAME d4_signal COMMAND signal_demo)
+    add_test(NAME d4_pipe_duplex COMMAND pipe_duplex_demo)
+    add_test(NAME d4_socketpair COMMAND socketpair_demo)
 
-    set_tests_properties(d4_mmap d4_signal PROPERTIES LABELS "D4")
-    set_tests_properties(d4_signal PROPERTIES
-        PASS_REGULAR_EXPRESSION "PASS: signal delivery and child cleanup"
-    )
+    set_tests_properties(
+    d4_mmap
+    d4_signal
+    d4_pipe_duplex
+    d4_socketpair
+    PROPERTIES LABELS "D4"
+)
+
+set_tests_properties(d4_signal PROPERTIES
+    PASS_REGULAR_EXPRESSION "PASS: signal delivery and child cleanup"
+)
+
+set_tests_properties(d4_pipe_duplex PROPERTIES
+    PASS_REGULAR_EXPRESSION "PASS: duplex pipe communication"
+)
+
+set_tests_properties(d4_socketpair PROPERTIES
+    PASS_REGULAR_EXPRESSION "PASS: socketpair communication"
+)
 
 endif()

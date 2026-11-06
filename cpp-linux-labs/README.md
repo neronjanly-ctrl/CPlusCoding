@@ -22,7 +22,8 @@ Executables are placed under `build/debug/cpp-linux-labs/`.
 | D1 | `file_io_demo` | FD lifecycle, file offset, EOF, `errno` |
 | D2 | `process_demo`, `exec_demo`, `pipe_demo`, `pipe_exec_demo`, `pipeline_demo` | `fork/exec/wait`, pipes, `dup2`, exit status |
 | D3 | `producer_consumer_demo`, `race_demo`, `race_unsafe_demo` | condition variables, bounded queues, race detection and repair |
-| D4 | `mmap_demo`, `signal_demo` | shared mapping, process-shared mutex, reliable signal waiting |
+| D4 | `mmap_demo`, `signal_demo`, `pipe_duplex_demo`, `socketpair_demo` | shared mapping, process-shared mutex, signals, local IPC comparison |
+| D5 | `tcp_echo_server/client`, `tcp_framed_server/client`, `tcp_protocol_test` | blocking TCP, byte-stream framing, partial I/O, half-close, protocol limits |
 
 `race_unsafe_demo` is intentionally excluded from normal builds and tests. It
 exists only to produce a TSan report in the opt-in `tsan` preset.
@@ -89,3 +90,36 @@ cmake --build build-debug --parallel 2
 
 ctest --test-dir build-debug \
     -L D4 --output-on-failure
+```
+
+## D5: Blocking TCP and Length-Prefixed Frames
+
+`tcp_echo_server` and `tcp_echo_client` are the initial EOF-delimited blocking
+echo experiment. `tcp_framed_server` and `tcp_framed_client` use a four-byte
+network-order payload length so one connection can carry multiple messages.
+The framing helpers live in `src/tcp_protocol.h`.
+
+Build and run the deterministic protocol tests:
+
+```bash
+cmake --preset debug
+cmake --build --preset debug --parallel 2
+ctest --preset debug -L D5 --output-on-failure
+```
+
+Run the TCP integration experiment in two terminals:
+
+```bash
+# Terminal A
+./build/debug/cpp-linux-labs/tcp_framed_server
+
+# Terminal B
+./build/debug/cpp-linux-labs/tcp_framed_client
+```
+
+The client verifies 1,000 sequential request/response frames on one connection,
+then half-closes its sending direction and waits for the server's EOF. The
+protocol test separately covers fragmented input, a combined multi-frame byte
+stream, the exact 1 MiB limit, oversized frames, truncated frames, and safe
+closed-peer sends. See [the D5 evidence record](docs/d5-tcp-framing-output.txt)
+for commands, results, and limitations.

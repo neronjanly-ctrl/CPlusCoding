@@ -1,0 +1,81 @@
+D5 TCP framing verification
+Date: 2026-11-06
+
+1. Debug protocol test
+
+Command:
+  cmake --build cpp-linux-labs/build-debug --parallel 2
+  ctest --test-dir cpp-linux-labs/build-debug -L D5 --output-on-failure -V
+
+Result:
+  Test #13: d5_tcp_protocol ... Passed
+  PASS: tcp protocol framing
+  100% tests passed, 0 tests failed out of 1
+
+The test covers:
+  - a normal frame and an empty frame
+  - a combined byte stream containing three complete frames
+  - a length header and payload consumed in separate fragments
+  - a frame whose payload is exactly 1 MiB
+  - sender and receiver rejection of a payload larger than 1 MiB
+  - clean peer close, truncated header, and truncated payload
+  - closed-peer send without process termination from SIGPIPE
+
+2. Repeated protocol test
+
+Command:
+  ctest --test-dir cpp-linux-labs/build-debug -L D5 \
+        --output-on-failure --repeat until-fail:100
+
+Result:
+  The D5 protocol test passed 100 consecutive runs.
+  100% tests passed, 0 tests failed out of 1
+
+3. ASan/UBSan protocol test
+
+Command:
+  cmake --build cpp-linux-labs/build-asan --parallel 2
+  ctest --test-dir cpp-linux-labs/build-asan -L D5 --output-on-failure
+
+Result:
+  Test #13: d5_tcp_protocol ... Passed
+  100% tests passed, 0 tests failed out of 1
+
+4. Framed TCP client/server
+
+Server:
+  ./cpp-linux-labs/build-debug/tcp_framed_server
+
+Client:
+  ./cpp-linux-labs/build-debug/tcp_framed_client
+
+Client summary:
+  [Client] Verified 1000/1000 frames
+  [Client] All frames verified: 1000
+  [Client] Total payload bytes: 42900
+  [Client] Server closed its sending direction
+  PASS: framed TCP client
+
+Limits of this evidence:
+  - The protocol fragmentation/coalescing cases use AF_UNIX SOCK_STREAM to
+    deterministically isolate byte-stream framing behavior.
+  - The TCP client uses sequential request/response, not pipelining.
+  - This does not validate a production concurrency model, nonblocking I/O,
+    performance, packet boundaries, or arbitrary network failures.
+
+5. Repository-wide preset verification before commit
+
+Commands:
+  cmake --preset <debug|release|asan|tsan>
+  cmake --build --preset <debug|release|asan|tsan> --parallel 2
+  ctest --preset <debug|release|asan|tsan> --output-on-failure
+
+Result:
+  Debug:     13/13 tests passed
+  Release:   13/13 tests passed
+  ASan/UBSan: 13/13 tests passed
+  TSan preset: 13/13 tests passed
+
+The TSan preset instruments only the existing safe/unsafe race comparison
+targets. A passing D5 test in that preset is not evidence that D5 was analyzed
+by ThreadSanitizer.

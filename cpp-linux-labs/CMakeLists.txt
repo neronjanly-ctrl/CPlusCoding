@@ -102,6 +102,31 @@ add_lab_executable(socketpair_demo src/socketpair_demo.cpp)
 target_link_libraries(mmap_demo PRIVATE Threads::Threads)
 
 # --------------------------------------------------
+# D5: TCP Networking
+# --------------------------------------------------
+
+add_lab_executable(tcp_echo_server src/tcp_echo_server.cpp)
+add_lab_executable(tcp_echo_client src/tcp_echo_client.cpp)
+add_lab_executable(tcp_protocol_test tests/tcp_protocol_test.cpp)
+add_lab_executable(tcp_framed_server src/tcp_framed_server.cpp)
+add_lab_executable(tcp_framed_client src/tcp_framed_client.cpp)
+
+target_link_libraries(
+    tcp_framed_server
+    PRIVATE Threads::Threads
+)
+
+target_link_libraries(
+    tcp_protocol_test
+    PRIVATE Threads::Threads
+)
+
+target_include_directories(
+    tcp_protocol_test
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+# --------------------------------------------------
 # Optional unsafe demonstrations
 # --------------------------------------------------
 
@@ -207,5 +232,14 @@ set_tests_properties(d4_pipe_duplex PROPERTIES
 set_tests_properties(d4_socketpair PROPERTIES
     PASS_REGULAR_EXPRESSION "PASS: socketpair communication"
 )
+
+    # D5
+    add_test(NAME d5_tcp_protocol COMMAND tcp_protocol_test)
+
+    set_tests_properties(d5_tcp_protocol PROPERTIES
+        LABELS "D5"
+        PASS_REGULAR_EXPRESSION "PASS: tcp protocol framing"
+        TIMEOUT 10
+    )
 
 endif()

@@ -7,7 +7,7 @@ Tencent-oriented C++/Linux backend learning project.
 
 | Path | Purpose | Current state |
 |---|---|---|
-| `cpp-linux-labs/` | Linux system-programming foundations | Active |
+| `cpp-linux-labs/` | Linux system-programming foundations | Active through D5 blocking TCP framing |
 | `mininet/` | Reactor-style network library | Planned; no implementation yet |
 | `linkcore/` | Short-link and hot-query service | Planned; no implementation yet |
 | `edge-gateway/` | Multi-instance gateway and resilience experiments | Planned; no implementation yet |

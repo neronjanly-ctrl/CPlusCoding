@@ -127,6 +127,18 @@ target_include_directories(
 )
 
 # --------------------------------------------------
+# D6: GDB Debugging
+# --------------------------------------------------
+
+add_lab_executable(
+    debug_crash_demo
+    src/debug_crash_demo.cpp
+)
+
+# This target must crash during the teaching scenario, so it is intentionally
+# excluded from normal CTest runs.
+
+# --------------------------------------------------
 # Optional unsafe demonstrations
 # --------------------------------------------------
 

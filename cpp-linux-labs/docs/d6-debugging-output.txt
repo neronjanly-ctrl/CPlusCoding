@@ -1,0 +1,77 @@
+D6 GDB and strace verification
+Date: 2026-11-09
+
+1. Build the intentional crash target
+
+Command:
+  cmake --preset debug
+  cmake --build --preset debug --target debug_crash_demo --parallel 2
+
+Result:
+  debug_crash_demo compiled and linked successfully.
+
+2. GDB breakpoint and crash
+
+Command:
+  gdb -q -batch ./build/debug/cpp-linux-labs/debug_crash_demo \
+    -ex 'set pagination off' \
+    -ex 'set debuginfod enabled off' \
+    -ex 'break calculate' \
+    -ex run \
+    -ex 'info args' \
+    -ex bt \
+    -ex continue \
+    -ex bt \
+    -ex 'frame 0' \
+    -ex 'info locals'
+
+Observed breakpoint:
+  Breakpoint 1, calculate (value=21) at debug_crash_demo.cpp:4
+  value = 21
+
+Observed call stack before the crash:
+  #0 calculate(value=21) at debug_crash_demo.cpp:4
+  #1 main() at debug_crash_demo.cpp:20
+
+Observed crash:
+  Program received signal SIGSEGV, Segmentation fault.
+  main() at debug_crash_demo.cpp:26
+  26  *ptr = 100;
+  ptr = 0x0
+
+3. strace and stdout buffering
+
+Without forcing a flush, the process crashed before its buffered std::cout text
+reached write(2). To make the output-to-system-call relationship observable, the
+verified command used stdbuf:
+
+  strace -f -yy -e trace=write,close stdbuf -o0 \
+    ./build/debug/cpp-linux-labs/debug_crash_demo
+
+Observed program writes:
+  write(1<pipe:[...]>, "Program started\n", 16) = 16
+  write(1<pipe:[...]>, "result = ", 9) = 9
+  write(1<pipe:[...]>, "86", 2) = 2
+  write(1<pipe:[...]>, "\n", 1) = 1
+  write(1<pipe:[...]>, "About to crash\n", 15) = 15
+
+Observed signal:
+  SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL}
+  killed by SIGSEGV
+
+4. Normal test-suite isolation
+
+Command:
+  ctest --preset debug --output-on-failure
+
+Result:
+  13/13 normal tests passed. debug_crash_demo is intentionally not registered
+  with CTest because its teaching outcome is a crash.
+
+Limits:
+  - The shell/strace text included "core dumped", but no core-file path or usable
+    core artifact was verified. This is not evidence that core analysis is ready.
+  - The current GDB evidence covers breakpoints, arguments, frames, local state,
+    and SIGSEGV location. Watchpoints and core-file analysis remain separate work.
+  - stdbuf changes stdout buffering only for observability; it does not fix or
+    cause the null-pointer bug.

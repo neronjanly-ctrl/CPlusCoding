@@ -4,10 +4,20 @@ Small C++17 programs for observing Linux resource behavior before building the
 MiniNet network library. Each program has one teaching purpose and returns a
 nonzero status when its checked expectation fails.
 
+## Code organization
+
+| Path | Responsibility |
+|---|---|
+| `src/` | One-purpose Linux/C++ experiments and shared protocol helpers |
+| `tests/` | Deterministic protocol tests that return nonzero on failure |
+| `docs/` | Reproduction output, system-call traces, explanations, and limitations |
+| `scripts/` | Explicit evidence-capture helpers; inspect scope before running |
+| `build/<preset>/` | Generated build trees; never commit these directories |
+
 ## Build from the repository root
 
 ```bash
-cd /home/neron/workspace/tencent-cpp
+cd /home/yourlinuxname/workspace/tencent-cpp
 cmake --preset debug
 cmake --build --preset debug --parallel 2
 ctest --preset debug
@@ -24,6 +34,7 @@ Executables are placed under `build/debug/cpp-linux-labs/`.
 | D3 | `producer_consumer_demo`, `race_demo`, `race_unsafe_demo` | condition variables, bounded queues, race detection and repair |
 | D4 | `mmap_demo`, `signal_demo`, `pipe_duplex_demo`, `socketpair_demo` | shared mapping, process-shared mutex, signals, local IPC comparison |
 | D5 | `tcp_echo_server/client`, `tcp_framed_server/client`, `tcp_protocol_test` | blocking TCP, byte-stream framing, partial I/O, half-close, protocol limits |
+| D6 | `debug_crash_demo` | GDB breakpoints, variables, call stacks, SIGSEGV, and debugger evidence |
 
 `race_unsafe_demo` is intentionally excluded from normal builds and tests. It
 exists only to produce a TSan report in the opt-in `tsan` preset.
@@ -31,7 +42,7 @@ exists only to produce a TSan report in the opt-in `tsan` preset.
 ## Sanitizer builds
 
 ```bash
-cd /home/neron/workspace/tencent-cpp
+cd /home/yourlinuxname/workspace/tencent-cpp
 
 cmake --preset asan
 cmake --build --preset asan --parallel 2
@@ -123,3 +134,57 @@ protocol test separately covers fragmented input, a combined multi-frame byte
 stream, the exact 1 MiB limit, oversized frames, truncated frames, and safe
 closed-peer sends. See [the D5 evidence record](docs/d5-tcp-framing-output.txt)
 for commands, results, and limitations.
+
+## D6: GDB and strace
+
+`debug_crash_demo` performs a small calculation and then intentionally writes
+through a null pointer. It is a debugger target, not a passing program, and is
+therefore excluded from CTest.
+
+Build only the debugger target:
+
+```bash
+cmake --preset debug
+cmake --build --preset debug --target debug_crash_demo
+```
+
+Observe a normal function call and the later crash:
+
+```bash
+gdb ./build/debug/cpp-linux-labs/debug_crash_demo
+```
+
+```gdb
+set pagination off
+set debuginfod enabled off
+break calculate
+run
+info args
+bt
+continue
+bt
+frame 0
+info locals
+quit
+```
+
+The first backtrace should contain `calculate` and `main`. After `continue`, the
+program should stop on `SIGSEGV` at the null-pointer write in `main`. A generated
+core file is not assumed: core-dump availability depends on the actual WSL and
+system configuration and must be checked before documenting core analysis.
+
+Use strace when the question concerns system-call arguments, return values, FD
+identity, or signal delivery rather than C++ local variables:
+
+```bash
+strace -f -yy -e trace=write,close stdbuf -o0 \
+  ./build/debug/cpp-linux-labs/debug_crash_demo
+```
+
+`stdbuf -o0` disables stdout buffering for this observation. Without it, the
+program may execute its `std::cout` statements but crash before the runtime
+library flushes them through `write(2)`. The command is expected to end nonzero
+after reporting `SIGSEGV`. GDB explains the source-level state and call stack;
+strace explains the process's interaction with the kernel. Neither tool repairs
+the program automatically. See [the D6 evidence record](docs/d6-debugging-output.txt)
+for observed output and limitations.
